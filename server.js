@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
 const moment = require("moment");
+const puppeteer = require("puppeteer");
 
 app.get("/", function(req, res) {
   getTrend();
@@ -13,18 +14,14 @@ console.log("start", "http://localhost:3000");
 app.listen(3000);
 
 const getTrend = async function() {
-  let toDate = moment()
-    .subtract(1, "days")
-    .format("YYYY-MM-DD");
-  let fromDate = moment()
-    .subtract(2, "days")
-    .format("YYYY-MM-DD");
-  let url =
+  const count = await getSerchPageCount();
+  const conditionDate = getSerchDate();
+  const url =
     "https://qiita.com/api/v2/items?query=" +
     "created%3A>" +
-    fromDate +
+    conditionDate.fromDate +
     "+created%3A<" +
-    toDate +
+    conditionDate.toDate +
     "&per_page=100";
 
   console.log(url);
@@ -33,10 +30,42 @@ const getTrend = async function() {
 
   let json = await res.json();
 
-  json.map(item => {
-    console.log("item.created_at:", item.created_at);
-  });
-  //   console.log("json:", json);
+  console.log("json.length:", json.length);
 
   return json;
+};
+
+const getSerchPageCount = async function() {
+  const conditionDate = getSerchDate();
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  const url =
+    "https://qiita.com/search?utf8=%E2%9C%93&sort=created&q=created%3A%3E" +
+    conditionDate.fromDate +
+    "+created%3A%3C" +
+    conditionDate.toDate;
+  await page.goto(url);
+  const count = await page.evaluate(function() {
+    return document.querySelector(
+      "#main > div > div > div.searchResultContainer_main > div.searchResultContainer_navigation > ul > li.active > a > span"
+    ).innerText;
+  });
+
+  console.log("count:", count);
+
+  await browser.close();
+};
+
+const getSerchDate = function() {
+  let toDate = moment()
+    .subtract(1, "days")
+    .format("YYYY-MM-DD");
+  let fromDate = moment()
+    .subtract(2, "days")
+    .format("YYYY-MM-DD");
+
+  return {
+    toDate: toDate,
+    fromDate: fromDate
+  };
 };
