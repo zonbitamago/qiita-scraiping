@@ -15,24 +15,35 @@ app.listen(3000);
 
 const getTrend = async function() {
   const count = await getSerchPageCount();
+  const peerPage = 100;
+  let maxPage = Math.floor(count / peerPage);
+  if (count % peerPage > 0) {
+    maxPage++;
+  }
+
   const conditionDate = getSerchDate();
-  const url =
-    "https://qiita.com/api/v2/items?query=" +
-    "created%3A>" +
-    conditionDate.fromDate +
-    "+created%3A<" +
-    conditionDate.toDate +
-    "&per_page=100";
+  for (var page = 1; page <= maxPage; page++) {
+    const url =
+      "https://qiita.com/api/v2/items?query=" +
+      "created%3A>" +
+      conditionDate.fromDate +
+      "+created%3A<" +
+      conditionDate.toDate +
+      "&per_page=" +
+      peerPage +
+      "&page=" +
+      page;
 
-  console.log(url);
+    console.log(url);
 
-  let res = await fetch(url).catch(err => console.log(err));
+    let res = await fetch(url).catch(err => console.log(err));
 
-  let json = await res.json();
+    let json = await res.json();
 
-  console.log("json.length:", json.length);
+    console.log("json.length:", json.length);
+  }
 
-  return json;
+  return "finish";
 };
 
 const getSerchPageCount = async function() {
@@ -54,6 +65,7 @@ const getSerchPageCount = async function() {
   console.log("count:", count);
 
   await browser.close();
+  return count;
 };
 
 const getSerchDate = function() {
