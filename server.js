@@ -38,6 +38,8 @@ const getTrend = async function() {
 
     console.log("json.length:", json.length);
 
+    await postResult(json);
+
     if (res.status != 200 || json.length < peerPage) {
       hasNextPage = false;
     } else {
@@ -62,4 +64,19 @@ const getSerchDate = function() {
     toDate: toDate,
     fromDate: fromDate
   };
+};
+
+const postResult = async function(json) {
+  const functionName = "qiitaScraiping";
+  const url =
+    process.env.NODE_ENV == "production"
+      ? "https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/"
+      : "http://localhost:5000/qiita-trend-web-scraping/us-central1/";
+  const res = await fetch(url + functionName, {
+    method: "POST",
+    body: JSON.stringify(json),
+    headers: { "Content-Type": "application/json" }
+  });
+
+  console.log("post result:", res.status);
 };
