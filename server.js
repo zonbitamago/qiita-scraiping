@@ -69,9 +69,9 @@ const getSerchDate = function() {
 const postResult = async function(json) {
   const functionName = "qiitaScraiping";
   const url =
-    process.env.NODE_ENV == "production"
-      ? "https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/"
-      : "http://localhost:5000/qiita-trend-web-scraping/us-central1/";
+    process.env.NODE_ENV != "production"
+      ? "http://localhost:5000/qiita-trend-web-scraping/us-central1/"
+      : "https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/";
   const res = await fetch(url + functionName, {
     method: "POST",
     body: JSON.stringify(json),
