@@ -16,7 +16,7 @@ exports.qiitaScraiping = functions.https.onRequest((request, response) => {
   const json = request.body;
   console.log("json:", json);
 
-  var docRef = db.collection("data").doc("sample");
+  var docRef = db.collection("data").doc("qiita");
 
   var setResult = docRef.set(json);
   console.log("setResult:", setResult);
