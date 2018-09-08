@@ -72,7 +72,11 @@ const postResult = async function(json) {
     process.env.NODE_ENV == "dev"
       ? "http://localhost:5000/qiita-trend-web-scraping/us-central1/"
       : "https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/";
-  const res = await fetch(url + functionName, {
+  const functionURL = url + functionName;
+
+  console.log("functionURL:", functionURL);
+
+  const res = await fetch(functionURL, {
     method: "POST",
     body: JSON.stringify(json),
     headers: { "Content-Type": "application/json" }
