@@ -37,8 +37,20 @@ const getTrend = async function() {
     let json = await res.json();
 
     console.log("json.length:", json.length);
+    const postJson = json.map(content => {
+      return {
+        created_at: content.created_at,
+        id: content.id,
+        likes_count: content.likes_count,
+        tags: content.tags,
+        title: content.title,
+        updated_at: content.updated_at,
+        url: content.url,
+        user: content.user
+      };
+    });
 
-    await postResult(json);
+    await postResult(postJson);
 
     if (res.status != 200 || json.length < peerPage) {
       hasNextPage = false;
