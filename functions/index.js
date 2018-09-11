@@ -14,12 +14,15 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 exports.qiitaScraiping = functions.https.onRequest((request, response) => {
   const json = request.body;
-  console.log("json:", json);
+  console.log("json.length:", json.length);
 
-  var docRef = db.collection("data").doc("qiita");
+  json.forEach(data => {
+    var docRef = db.collection("qiita").doc(data.id);
+    docRef.set(data);
+  });
 
-  var setResult = docRef.set(json);
-  console.log("setResult:", setResult);
+  // var setResult = docRef.set(json);
+  // console.log("setResult:", setResult);
 
   response.send("Hello QiitaScraiping!");
 });
