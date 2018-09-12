@@ -49,9 +49,6 @@ const getTrend = async function() {
         user: content.user
       };
     });
-    const postJson = {
-      data: postData
-    };
 
     await postResult(postData);
 
@@ -72,7 +69,7 @@ const getSerchDate = function() {
     .subtract(1, "days")
     .format("YYYY-MM-DD");
   let fromDate = moment()
-    .subtract(2, "days")
+    .subtract(7, "days")
     .format("YYYY-MM-DD");
 
   return {

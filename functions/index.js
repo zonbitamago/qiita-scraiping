@@ -21,8 +21,5 @@ exports.qiitaScraiping = functions.https.onRequest((request, response) => {
     docRef.set(data);
   });
 
-  // var setResult = docRef.set(json);
-  // console.log("setResult:", setResult);
-
   response.send("Hello QiitaScraiping!");
 });
