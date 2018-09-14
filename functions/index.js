@@ -37,9 +37,9 @@ function postFunction(request, response) {
     docRef.set(data);
   });
 
-  response.send("Hello QiitaScraiping!");
+  response.send("Hello postFunction!");
 }
 
 function getFUnction(request, response) {
-  response.send("Hello QiitaScraiping!");
+  response.send("Hello getFunction!");
 }
