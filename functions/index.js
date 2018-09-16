@@ -40,6 +40,15 @@ function postFunction(request, response) {
   response.send("Hello postFunction!");
 }
 
-function getFUnction(request, response) {
-  response.send("Hello getFunction!");
+async function getFUnction(request, response) {
+  const docRef = db.collection("qiita").doc("c2c658925f7d70c4077f");
+  const getDoc = await docRef.get()
+  if (!getDoc.exists) {
+      console.log("No such document!");
+    } else {
+      console.log(getDoc);
+    }
+  }
+
+  response.send(getDoc);
 }
