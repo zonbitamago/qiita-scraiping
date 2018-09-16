@@ -25,7 +25,7 @@ exports.qiitaScraiping = functions.https.onRequest((request, response) => {
   // }
   request.method == "POST"
     ? postFunction(request, response)
-    : getFUnction(request, response);
+    : getFunction(request, response);
 });
 
 function postFunction(request, response) {
@@ -40,15 +40,10 @@ function postFunction(request, response) {
   response.send("Hello postFunction!");
 }
 
-async function getFUnction(request, response) {
-  const docRef = db.collection("qiita").doc("c2c658925f7d70c4077f");
-  const getDoc = await docRef.get()
-  if (!getDoc.exists) {
-      console.log("No such document!");
-    } else {
-      console.log(getDoc);
-    }
-  }
+async function getFunction(request, response) {
+  const docRef = db.collection("qiita");
+
+  const getDoc = await docRef.where("id", "==", "0004b7a281d43fac5ef9").get();
 
   response.send(getDoc);
 }
