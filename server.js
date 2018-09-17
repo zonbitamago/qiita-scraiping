@@ -18,6 +18,8 @@ const getTrend = async function() {
   let hasNextPage = true;
   const conditionDate = getSerchDate();
 
+  const postContent = [];
+
   while (hasNextPage) {
     const url =
       "https://qiita.com/api/v2/items?query=" +
@@ -37,7 +39,23 @@ const getTrend = async function() {
     let json = await res.json();
 
     console.log("json.length:", json.length);
-    const postData = json.map(content => {
+
+    postContent.push(json);
+
+    if (res.status != 200 || json.length < peerPage) {
+      hasNextPage = false;
+    } else {
+      page++;
+    }
+  }
+
+  postContent
+    .sort((a, b) => {
+      //いいね数降順
+      return b.likes_count - a.likes_count;
+    })
+    .slice(0, 20)
+    .map(content => {
       return {
         created_at: content.created_at,
         id: content.id,
@@ -50,14 +68,15 @@ const getTrend = async function() {
       };
     });
 
-    await postResult(postData);
+  console.log("postContent.length:", postContent.length);
 
-    if (res.status != 200 || json.length < peerPage) {
-      hasNextPage = false;
-    } else {
-      page++;
-    }
-  }
+  const postData = {
+    [moment()
+      .subtract(1, "days")
+      .format("YYYY-MM-DD")]: postContent
+  };
+
+  await postResult(postData);
 
   console.log("finish fetch");
 
