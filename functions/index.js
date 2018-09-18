@@ -20,15 +20,13 @@ exports.qiitaScraiping = functions.https.onRequest((request, response) => {
 
 function postFunction(request, response) {
   const json = request.body;
-  console.log(json);
 
-  console.log("json.length:", json.length);
+  for (key in json) {
+    var docRef = db.collection("weekly").doc(key);
+    console.log(json[key]);
 
-  json.forEach(data => {
-    var docRef = db.collection("weekly").doc(data.id);
-    docRef.set(data);
-  });
-
+    docRef.set(json[key]);
+  }
   response.send("Hello postFunction!");
 }
 

@@ -18,7 +18,7 @@ const getTrend = async function() {
   let hasNextPage = true;
   const conditionDate = getSerchDate();
 
-  const postContent = [];
+  let postContent = [];
 
   while (hasNextPage) {
     const url =
@@ -49,7 +49,7 @@ const getTrend = async function() {
     }
   }
 
-  postContent
+  postContent = postContent
     .sort((a, b) => {
       //いいね数降順
       return b.likes_count - a.likes_count;
