@@ -23,9 +23,10 @@ function postFunction(request, response) {
 
   for (key in json) {
     var docRef = db.collection("weekly").doc(key);
-    console.log(json[key]);
+    // console.log(json[key]);
 
-    docRef.set(JSON.parse(json[key]));
+    docRef.set({ data: json[key] });
+    // docRef.set("1");
   }
   response.send("Hello postFunction!");
 }

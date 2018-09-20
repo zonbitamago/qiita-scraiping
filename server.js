@@ -40,7 +40,7 @@ const getTrend = async function() {
 
     console.log("json.length:", json.length);
 
-    if (res.status != 200) {
+    if (res.status == 200) {
       json.forEach(content => {
         postContent.push({
           created_at: content.created_at,
@@ -68,19 +68,6 @@ const getTrend = async function() {
       return b.likes_count - a.likes_count;
     })
     .slice(0, 20);
-
-  // postContent = postContent.map(content => {
-  //   return {
-  //     created_at: content.created_at,
-  //     id: content.id,
-  //     likes_count: content.likes_count,
-  //     tags: content.tags,
-  //     title: content.title,
-  //     updated_at: content.updated_at,
-  //     url: content.url,
-  //     user: content.user
-  //   };
-  // });
 
   console.log("postContent.length:", postContent.length);
 
@@ -120,7 +107,6 @@ const postResult = async function(json) {
   const functionURL = url + functionName;
 
   console.log("functionURL:", functionURL);
-  console.log("JSON.stringify(json):", JSON.stringify(json));
 
   const res = await fetch(functionURL, {
     method: "POST",
