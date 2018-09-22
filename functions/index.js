@@ -12,39 +12,35 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
-app.get("/:type/:date", async (req, res) => {
-  console.log("type:", req.params.type);
-  console.log("date:", req.params.date);
-
-  const doc = await getFunction(req.params.type, req.params.date);
-
-  res.send(doc);
+app.get("/:type/:date", function(req, res) {
+  const doc = getFunction(req.params.type, req.params.date);
+  doc.then(content => {
+    res.send(content.data());
+  });
 });
 
-app.post("/", (req, res) => {
-  postFunction(req);
+app.post("/:type", function(req, res) {
+  const json = req.body;
+  const type = req.params.type;
+  postFunction(json, type);
   res.send("Hello postFunction!");
 });
 
 const api = functions.https.onRequest(app);
 exports.qiitaScraiping = api;
 
-function postFunction(request) {
-  const json = request.body;
-
+function postFunction(json, type) {
   for (key in json) {
-    var docRef = db.collection("weekly").doc(key);
-    // console.log(json[key]);
+    var docRef = db.collection(type).doc(key);
 
     docRef.set({ data: json[key] });
-    // docRef.set("1");
   }
 }
 
-async function getFunction(type, date) {
+function getFunction(type, date) {
   const docRef = db.collection(type);
 
-  const getDoc = await docRef.doc(date).get();
+  const getDoc = docRef.doc(date).get();
 
   return getDoc;
 }

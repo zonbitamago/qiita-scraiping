@@ -3,8 +3,12 @@ const app = express();
 const fetch = require("node-fetch");
 const moment = require("moment");
 
+const type_weekly = "weekly";
+const type_daily = "daily";
+
 app.get("/", function(req, res) {
-  getTrend();
+  getTrend(type_weekly);
+  getTrend(type_daily);
   res.send("Hello World");
 });
 
@@ -12,11 +16,13 @@ console.log("start", "http://localhost:3000");
 
 app.listen(3000);
 
-const getTrend = async function() {
+const getTrend = async function(type) {
+  console.log("【type:", type, " start】");
+
   const peerPage = 100;
   let page = 1;
   let hasNextPage = true;
-  const conditionDate = getSerchDate();
+  const conditionDate = getSerchDate(type);
 
   let postContent = [];
 
@@ -77,19 +83,21 @@ const getTrend = async function() {
       .format("YYYY-MM-DD")]: postContent
   };
 
-  await postResult(postData);
+  await postResult(postData, type);
 
   console.log("finish fetch");
+
+  console.log("【type:", type, " end】");
 
   return "finish";
 };
 
-const getSerchDate = function() {
-  let toDate = moment()
+const getSerchDate = function(type) {
+  const toDate = moment()
     .subtract(1, "days")
     .format("YYYY-MM-DD");
-  let fromDate = moment()
-    .subtract(7, "days")
+  const fromDate = moment()
+    .subtract(type == type_weekly ? 7 : 2, "days")
     .format("YYYY-MM-DD");
 
   return {
@@ -98,13 +106,13 @@ const getSerchDate = function() {
   };
 };
 
-const postResult = async function(json) {
+const postResult = async function(json, type) {
   const functionName = "qiitaScraiping";
   const url =
     process.env.NODE_ENV == "dev"
       ? "http://localhost:5000/qiita-trend-web-scraping/us-central1/"
       : "https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/";
-  const functionURL = url + functionName;
+  const functionURL = url + functionName + "/" + type;
 
   console.log("functionURL:", functionURL);
 
