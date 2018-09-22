@@ -1,24 +1,35 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const express = require("express");
+const cors = require("cors");
 
 admin.initializeApp(functions.config().firebase);
 
 var db = admin.firestore();
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
+const app = express();
+
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
+
+app.get("/:type/:date", async (req, res) => {
+  console.log("type:", req.params.type);
+  console.log("date:", req.params.date);
+
+  const doc = await getFunction(req.params.type, req.params.date);
+
+  res.send(doc);
 });
 
-exports.qiitaScraiping = functions.https.onRequest((request, response) => {
-  request.method == "POST"
-    ? postFunction(request, response)
-    : getFunction(request, response);
+app.post("/", (req, res) => {
+  postFunction(req);
+  res.send("Hello postFunction!");
 });
 
-function postFunction(request, response) {
+const api = functions.https.onRequest(app);
+exports.qiitaScraiping = api;
+
+function postFunction(request) {
   const json = request.body;
 
   for (key in json) {
@@ -28,13 +39,12 @@ function postFunction(request, response) {
     docRef.set({ data: json[key] });
     // docRef.set("1");
   }
-  response.send("Hello postFunction!");
 }
 
-async function getFunction(request, response) {
-  const docRef = db.collection("qiita");
+async function getFunction(type, date) {
+  const docRef = db.collection(type);
 
-  const getDoc = await docRef.where("id", "==", "0004b7a281d43fac5ef9").get();
+  const getDoc = await docRef.doc(date).get();
 
-  response.send(getDoc);
+  return getDoc;
 }
