@@ -79,6 +79,8 @@ const getTrend = async function(type) {
 
   const postData = {
     [moment()
+      .utc()
+      .add(9, "hours")
       .subtract(1, "days")
       .format("YYYY-MM-DD")]: postContent
   };
@@ -94,9 +96,13 @@ const getTrend = async function(type) {
 
 const getSerchDate = function(type) {
   const toDate = moment()
+    .utc()
+    .add(9, "hours")
     .subtract(1, "days")
     .format("YYYY-MM-DD");
   const fromDate = moment()
+    .utc()
+    .add(9, "hours")
     .subtract(type == type_weekly ? 7 : 2, "days")
     .format("YYYY-MM-DD");
 
