@@ -1,37 +1,33 @@
 # qiita-scraiping
 
-Qiita 投稿記事の  いいね数ランキング保存&取得 API。<br>
-以下 2 つのランキングが取得可能。<br>
+Qiita投稿記事のいいね数ランキング保存&取得API。<br>
+以下2つのランキングが取得可能。<br>
 
--  日別いいね数ランキング(投稿翌日までのいいね数ランキング)
-- 週別いいね数ランキング(投稿翌日から 7 日間のいいね数ランキング)
+- 日別いいね数ランキング(投稿翌日までのいいね数ランキング)
+- 週別いいね数ランキング(投稿翌日から7日間のいいね数ランキング)
 
-※どちらのランキングも 2 時間毎に最新化。<br>
+※どちらのランキングも2時間毎に最新化。<br>
 
 #### データ登録フロー
-
 ![scraiping-flow](doc/scraiping-flow.png)
 
 #### データ取得フロー
-
 ![getAPI-flow](doc/getAPI-flow.png)
 
 # Dependency
 
 - Node.js (言語)
-- Google Apps Script ( ジョブスケジューラとして利用)
+- Google Apps Script (ジョブスケジューラとして利用)
 - Glitch (スクレイピング用サーバとして利用)
-- Cloud Functions (Firestore への登録用)
+- Cloud Functions (Firestoreへの登録用)
 - Cloud Firestore (データストア)
 
 # Usage
 
 ## ランキング取得 API
-
 `https://us-central1-qiita-trend-web-scraping.cloudfunctions.net/qiitaScraiping/{type}/{YYYY-MM-DD}`
 
 #### {type}
-
 `daily` or `weekly`
 
 - daily ・・・日別ランキング
@@ -126,7 +122,7 @@ Qiita 投稿記事の  いいね数ランキング保存&取得 API。<br>
       "likes_count": 909,
       "updated_at": "2018-09-21T18:34:38+09:00"
     },
-    ...略
+    {"以下略"}
   ]
 }
 ```
