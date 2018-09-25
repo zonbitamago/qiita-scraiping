@@ -1,0 +1,17 @@
+@startuml
+title Qiita ranking API
+
+participant Browser as browser
+
+box "Firebase" #F5D3CD
+participant "Cloud Functions" as functions
+participant "Cloud Firestore" as store
+end box
+
+autonumber
+browser -> functions: request
+functions -> store: requestData
+functions <- store:send Data
+browser <- functions:response
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+title Qiita Scraiping Flow
+
+participant "Google Apps Script" as script
+participant Glitch as Glitch
+participant "Qiita API" as qiita
+
+box "Firebase" #F5D3CD
+participant "Cloud Functions" as functions
+participant "Cloud Firestore" as store
+end box
+
+
+autonumber
+script -> Glitch:request
+Glitch -> qiita:request getAPI
+Glitch <- qiita:response getAPI
+Glitch -> functions:request
+functions -> store:regist response
+
+note over script
+Google Apps Script
+  __https://www.google.com/script/start/__
+
+Glitch
+  __https://glitch.com/__
+
+Qiita API
+  __https://qiita.com/api/v2/docs__
+
+Cloud Functions
+  __https://firebase.google.com/products/functions/__
+
+Cloud Firestore
+  __https://firebase.google.com/products/firestore/__
+end note
+
+@enduml
