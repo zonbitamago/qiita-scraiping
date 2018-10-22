@@ -13,6 +13,7 @@ const app = express();
 app.use(cors({ origin: true }));
 
 app.get("/:type/:date", function(req, res) {
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=900");
   const doc = getFunction(req.params.type, req.params.date);
   doc.then(content => {
     res.send(content.data());
