@@ -13,17 +13,28 @@ const app = express();
 app.use(cors({ origin: true }));
 
 app.get("/:type/:date", function(req, res) {
+  console.log("get start");
+  console.log(showLog(req));
   res.setHeader("Cache-Control", "public, max-age=300, s-maxage=900");
   const doc = getFunction(req.params.type, req.params.date);
+
+  console.log("get end");
+
   doc.then(content => {
     res.send(content.data());
   });
 });
 
 app.post("/:type", function(req, res) {
+  console.log("post start");
+  console.log(req.url);
+
   const json = req.body;
   const type = req.params.type;
   postFunction(json, type);
+
+  console.log("post end");
+
   res.send("Hello postFunction!");
 });
 
@@ -44,4 +55,37 @@ function getFunction(type, date) {
   const getDoc = docRef.doc(date).get();
 
   return getDoc;
+}
+
+function showLog(req) {
+  function getip(req) {
+    return (
+      req.ip ||
+      req._remoteAddress ||
+      (req.connection && req.connection.remoteAddress) ||
+      undefined
+    );
+  }
+
+  function getUrl(req) {
+    return req.originalUrl || req.url;
+  }
+
+  function getReferrer(req) {
+    return req.headers["referer"] || req.headers["referrer"];
+  }
+
+  function getUserAgent(req) {
+    return req.headers["user-agent"];
+  }
+
+  return (
+    getip(req) +
+    " " +
+    getUrl(req) +
+    " " +
+    getReferrer(req) +
+    " " +
+    getUserAgent(req)
+  );
 }
