@@ -31,8 +31,8 @@ const getTrend = async function(type) {
       "https://qiita.com/api/v2/items?query=" +
       "created%3A>" +
       conditionDate.fromDate +
-      "+created%3A<" +
-      conditionDate.toDate +
+      // "+created%3A<" +
+      // conditionDate.toDate +
       "&per_page=" +
       peerPage +
       "&page=" +
@@ -46,7 +46,7 @@ const getTrend = async function(type) {
 
     console.log("json.length:", json.length);
 
-    if (res.status == 200) {
+    if (res.status == 200 && json.length != 0) {
       json.forEach(content => {
         postContent.push({
           created_at: content.created_at,
@@ -61,7 +61,7 @@ const getTrend = async function(type) {
       });
     }
 
-    if (res.status != 200 || json.length < peerPage) {
+    if (res.status != 200 || json.length == 0) {
       hasNextPage = false;
     } else {
       page++;
