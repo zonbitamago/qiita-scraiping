@@ -7,6 +7,19 @@
         "source": "/**",
         "function": "qiitaScraiping"
       }
+    ],
+
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/dist",
+        "type": 301
+      },
+      {
+        "source": "/index.html",
+        "destination": "/dist",
+        "type": 301
+      }
     ]
   }
 }

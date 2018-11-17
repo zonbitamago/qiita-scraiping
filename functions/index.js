@@ -2,6 +2,7 @@ const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
+const swaggerJSDoc = require("swagger-jsdoc");
 
 admin.initializeApp(functions.config().firebase);
 
@@ -12,6 +13,65 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
+//クロスサイト対応。swagger-uiから見た際、クロスサイトのエラーがでることへの対応。
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+//swaggerの基本定義
+var options = {
+  swaggerDefinition: {
+    info: {
+      title: "qiita-scraiping",
+      version: "1.0.0."
+    }
+  },
+  apis: ["./index.js"] //自分自身を指定。外部化した場合は、そのファイルを指定。配列で複数指定も可能。
+};
+var swaggerSpec = swaggerJSDoc(options);
+//swagger-ui向けにjsonを返すAPI
+app.get("/api-docs.json", function(req, res) {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
+/**
+ * @swagger
+ * tags:
+ *  name: trends
+ *  description: qiitaいいね数ランキング
+ */
+
+/**
+ * @swagger
+ * paths:
+ *   /{type}/{date}:
+ *     get:
+ *       tags:
+ *         - trends
+ *       summary: ランキング取得API
+ *       description: qiitaいいね数ランキングを日毎/週毎で取得する
+ *       parameters:
+ *         - name: type
+ *           in: path
+ *           description: 期間タイプ
+ *           required: true
+ *           type: string
+ *           enum:
+ *           - daily
+ *           - weekly
+ *         - name: date
+ *           in: path
+ *           description: 日付(YYYY-MM-DD)
+ *           required: true
+ *           type: string
+ *
+ */
 app.get("/:type/:date", function(req, res) {
   console.log("get start");
   console.log(showLog(req));
