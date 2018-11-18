@@ -67,9 +67,12 @@ app.get("/api-docs.json", function(req, res) {
  *           - weekly
  *         - name: date
  *           in: path
- *           description: 日付(YYYY-MM-DD)
+ *           description: 日付(YYYY-MM-DD)。2018-09-23〜現在日付-1日まで指定可。
  *           required: true
  *           type: string
+ *       responses:
+ *         200:
+ *           description: qiitaいいね数ランキング(20件)
  *
  */
 app.get("/:type/:date", function(req, res) {
